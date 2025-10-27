@@ -86,7 +86,7 @@ Listar nome dos clientes, cidade e estado de todos aqueles que são dos estados 
 */
 SELECT nomeCliente, cidade, estado FROM cliente
 WHERE (nomeCliente LIKE 'F%' AND estado ='SP') OR (nomeCliente LIKE 'F%' AND estado = 'RJ') OR (nomeCliente LIKE 'F%' AND estado ='MG') OR (nomeCliente LIKE 'F%' AND estado = 'ES') 
-ORDER BY nomeCliente DESC 
+ORDER BY nomeCliente 
 
 /*7
 
@@ -97,7 +97,7 @@ em ordem alfabética por nome
 
 SELECT nomeCliente, cidade FROM cliente 
 WHERE (complemento IS NULL) OR (complemento like'Bloco%') OR (complemento like'Casa%')
-ORDER BY nomeCliente DESC 
+ORDER BY nomeCliente  
  
  
 /*8 Listar todos os dados dos clientes que morem no estado de SP e morem em Avenidas,
@@ -106,4 +106,18 @@ em ordem decrescente por nome
 */
 SELECT nomeCliente,cpf,Email,cidade,estado,CEP,tipoLogadouro,nomeLogradouro,numero,complemento FROM cliente 
 WHERE tipoLogadouro = 'Avenida' AND estado ='SP'
+
+/*9 Listar nome e cidade de todos os clientes que começam com a letra R, ordenando 
+por nome em ordem alfabética*/
+
+SELECT nomeCliente, cidade FROM cliente
+WHERE nomeCliente LIKE 'R%'
+ORDER BY nomeCliente ASC  
+ 
+/*10 Listar o nome, email e cpf de todos os clientes que possuem email da uol e que morem 
+no estado de sp */
+
+SELECT nomeCliente, Email, cpf FROM cliente 
+WHERE (Email LIKE '%@uol' AND estado ='SP')
+ORDER BY nomeCliente ASC 
 
