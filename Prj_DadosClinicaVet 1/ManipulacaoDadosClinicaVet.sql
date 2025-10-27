@@ -118,6 +118,6 @@ ORDER BY nomeCliente ASC
 no estado de sp */
 
 SELECT nomeCliente, Email, cpf FROM cliente 
-WHERE (Email LIKE '%@uol' AND estado ='SP')
+WHERE (Email LIKE '%@uol.%' AND estado ='SP')
 ORDER BY nomeCliente ASC 
 
