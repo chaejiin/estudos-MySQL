@@ -60,23 +60,27 @@ REFERENCES Vet (idVeterinario)
 
 CREATE TABLE Consulta(
 idConsulta INT PRIMARY KEY AUTO_INCREMENT,
+idAnimal INT NOT NULL,
+idVeterinario INT NOT NULL,
+dataHora DATETIME NOT NULL,
+pago BIT NOT NULL,
+formaPagamento VARCHAR (50) NOT NULL,
+valorTotal DECIMAL (10,2) NOT NULL,
+quantidadeDvezes TINYINT,
+valorPago DECIMAL(10,2),
 CONSTRAINT fk_Consula_Vet FOREIGN KEY (idVeterinario)
 REFERENCES Vet (idVeterinario),
 CONSTRAINT fk_Consulta_Animal FOREIGN KEY (idAnimal)
-REFERENCES Animal (idAnimal),
-dataHora DATETIME NOT NULL,
-pago BIT NOT NULL,
-formaPagamento VARCHAR(50) NOT NULL,
-valorTotal(10,2) NOT NULL,
-quantidadeDvezes TINYINT,
-valorPago DECIMAL(10,2)
+REFERENCES Animal (idAnimal)
 );
 
 CREATE TABLE consulta_tipoServico(
 idConsultaTipoServico INT PRIMARY KEY AUTO_INCREMENT,
-CONSTRAINT fk_consulta_tipoServico_TipoServico FOREIGN KEY (idTipoServico)
-REFERENCES TipoServico (idTipoServico),
+idTipoServico INT NOT NULL,
+valorServico DECIMAL(10,2) NOT NULL,
+idConsulta INT NOT NULL,
 CONSTRAINT fk_consulta_tipoServico_Consulta FOREIGN KEY (idConsulta)
 REFERENCES Consulta (idConsulta),
-valorServico DECIMAL(10,2) NOT NULL
+CONSTRAINT fk_consulta_tipoServico_TipoServico FOREIGN KEY (idTipoServico)
+REFERENCES TipoServico (idTipoServico)
 );

@@ -1,4 +1,4 @@
-/*Busca genérica de dados */
+clinicavet/*Busca genérica de dados */
 SELECT * FROM animal 
 
 /*Busca específica de dados */
