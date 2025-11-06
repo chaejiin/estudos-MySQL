@@ -126,9 +126,67 @@ ON vet.idVeterinario = consulta.idVeterinario
 WHERE nomeVeterinario LIKE 'P%'
 ORDER BY nomeVeterinario, dataHora ASC
 
-/*Nome do animal, nome do cliente, contatos do cliente em ordem alfabética por nome do animal apenas clientes que morem no estado SP*/
+/* A - Nome do animal, nome do cliente, contatos do cliente em ordem alfabética por nome do animal apenas clientes que morem no estado SP*/
 SELECT nomeAnimal, nomeCliente, estado, Email
 FROM cliente INNER JOIN animal
-ON  animal.idAnimal = cliente.idCliente 
+ON  animal.idCliente = cliente.idCliente 
 WHERE estado LIKE 'SP'
 ORDER BY nomeAnimal, nomeCliente ASC
+
+/* B - Nome do animal, peso, que animal que é, nome do cliente de todos os animais em ordem alfabética por nome do animal */
+SELECT nomeAnimal,peso, especie, nomeCliente FROM animal
+INNER JOIN cliente
+ON animal.idCliente = cliente.idCliente
+ORDER BY nomeAnimal
+
+/* C - Nome do procedimento, seu valor, de todos os procedimentos que foram realizados em alguma consulta, em ordem alfabética por nome do procedimento. Também se requer a data
+em que foram realizados os procedimentos.*/  
+SELECT nomeServico, valor, dataHora FROM tiposervico 
+INNER JOIN consulta_tiposervico 
+ON consulta_tiposervico.idTipoServico = tiposervico.idTipoServico
+INNER JOIN consulta 
+ON consulta_tiposervico.idConsulta = consulta.idConsulta
+ORDER BY nomeServico
+
+/* D - Nome do procedimento, seu valor, de todos os procedimentos cadastrados sejam realizados ou não em alguma consulta, em ordem alfabética por nome do procedimento. 
+Também se requer a data em que foram realizados os procedimentos. */
+SELECT nomeServico,valor,dataHora
+FROM tiposervico 
+LEFT JOIN consulta_tiposervico ON tipoServico.idTipoServico = consulta_tiposervico.idTipoServico
+LEFT JOIN Consulta ON consulta_tiposervico.idConsulta = consulta.idConsulta
+ORDER BY nomeServico;
+ 
+/* E - Nome do cliente, cpf, cidade, estado de todos os clientes que vivem na região sudeste em ordem alfabética por nome e cidade.*/
+SELECT nomecliente,cpf,cidade,estado FROM cliente
+WHERE estado IN ('sp','es','rj','mg'); 
+
+/*Funções de Agregação*/
+/*Count*/
+SELECT COUNT(idAnimal) AS 'Qtd Animais' FROM animal;
+ 
+/*Max |Min */
+SELECT MAX(idCliente) AS 'Maior ID de Cliente' FROM cliente;
+SELECT MIN(idCliente) AS 'Menor ID de Cliente' FROM cliente;
+SELECT MAX(peso) AS 'Animal mais pesado' FROM animal
+ 
+/*AVG*/
+SELECT AVG(peso) AS 'Média de pesos' FROM animal;
+ 
+/*SUM*/
+SELECT SUM(valorPago) AS 'Rendimento Bruto - R$' FROM consulta;
+ 
+/*Funções Agregação com GROUP BY*/
+/*Quantidade de clientes por estado*/
+SELECT estado, COUNT(idCliente) AS Qtd FROM cliente  WHERE estado IN('SC','PR','RS') GROUP BY estado ORDER BY estado DESC;
+SELECT estado, COUNT(idCliente) AS Qtd FROM cliente  WHERE estado IN('SC','PR','RS') GROUP BY estado ORDER BY Qtd DESC
+
+/*Todos os animais e a quantidade de espécies*/
+SELECT especie, COUNT(*) AS quantidade 
+FROM animal 
+GROUP BY especie;  
+ 
+/*Todos os animais e a quantidade de espécies, mas apenas dos animais que possuem 
+mais de 3 espécies*/
+SELECT especie, COUNT(idAnimal) AS quantidade FROM animal
+GROUP BY especie
+HAVING quantidade >=3 
