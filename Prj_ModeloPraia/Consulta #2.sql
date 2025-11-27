@@ -1,4 +1,4 @@
-/*1) Utilizando o comando ALTER TABLE, adicionar à tabela cliente já criada os seguintes atributos: 
+modelopraia/*1) Utilizando o comando ALTER TABLE, adicionar à tabela cliente já criada os seguintes atributos: 
 email, cidade, estado, endereço (lembre-se que trata-se de atributo composto) */
 
 ALTER TABLE Cliente 
@@ -177,7 +177,112 @@ LIMIT 2;
 
 /*9)Inserir o aluguel de 1 guarda sol P para 3 pessoas quaisquer feita pelo Cebolinha, em 27/12/24.Fazer o update da quantidade retirando do estoque.*/
 
+SELECT idCliente, nomeCliente FROM Cliente LIMIT 3; 
+SELECT idFuncionario FROM Funcionario WHERE nomeFuncionario = 'Cebolinha'; 
+SELECT idEquipamento, valorHora FROM Equipamento WHERE nomeEquipamento = 'Guarda Sol P';
+
+START TRANSACTION;
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Donald'), 1, '2024-12-27 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem)
+VALUES (LAST_INSERT_ID(), 3, 1, 2.00, 2.00);
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Margarida'), 1, '2024-12-27 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem)
+VALUES (LAST_INSERT_ID(), 3, 1, 2.00, 2.00);
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Patinhas'), 1, '2024-12-27 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem)
+VALUES (LAST_INSERT_ID(), 3, 1, 2.00, 2.00);
+
+
+UPDATE Equipamento
+SET qtd = qtd - 3
+WHERE idEquipamento = 3;
+
+COMMIT;
+
+SELECT * FROM Aluguel ORDER BY idAluguel DESC LIMIT 3;
+SELECT * FROM AluguelEquipamento ORDER BY idAluguelEquipamento DESC LIMIT 3;
+SELECT nomeEquipamento, qtd FROM Equipamento WHERE idEquipamento = 3;
+
 /*10)Inserir o aluguel de 2 cadeiras 4 posições e um guarda sol G para 6 pessoas aleatórias feitas pelo Chico Bento, em dez 28/12/24. Fazer o update da quantidade retirando do estoque.*/
+
+START TRANSACTION;
+
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Huguinho'), 3, '2024-12-28 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem) VALUES 
+(LAST_INSERT_ID(), 2, 2, 3.50, 7.00), 
+(LAST_INSERT_ID(), 4, 1, 3.00, 3.00); 
+
+
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Luizinho'), 3, '2024-12-28 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem) VALUES 
+(LAST_INSERT_ID(), 2, 2, 3.50, 7.00),
+(LAST_INSERT_ID(), 4, 1, 3.00, 3.00);
+
+
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Zezinho'), 3, '2024-12-28 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem) VALUES 
+(LAST_INSERT_ID(), 2, 2, 3.50, 7.00),
+(LAST_INSERT_ID(), 4, 1, 3.00, 3.00);
+
+
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Mulan'), 3, '2024-12-28 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem) VALUES 
+(LAST_INSERT_ID(), 2, 2, 3.50, 7.00),
+(LAST_INSERT_ID(), 4, 1, 3.00, 3.00);
+
+
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Moana'), 3, '2024-12-28 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem) VALUES 
+(LAST_INSERT_ID(), 2, 2, 3.50, 7.00),
+(LAST_INSERT_ID(), 4, 1, 3.00, 3.00);
+
+
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada) 
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Asnésio'), 3, '2024-12-28 00:00:00');
+
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem) VALUES 
+(LAST_INSERT_ID(), 2, 2, 3.50, 7.00),
+(LAST_INSERT_ID(), 4, 1, 3.00, 3.00);
+
+
+
+UPDATE Equipamento
+SET qtd = qtd - 12
+WHERE idEquipamento = 2;
+
+UPDATE Equipamento
+SET qtd = qtd - 6
+WHERE idEquipamento = 4;
+
+COMMIT;
+
+
+SELECT * FROM Aluguel ORDER BY idAluguel DESC LIMIT 6;
+SELECT nomeEquipamento, qtd FROM Equipamento WHERE idEquipamento IN (2, 4);
 
 /*11)Listar o nome e os contatos de todos os clientes da barraca em ordem alfabética. */
 SELECT nomeCliente, email 
@@ -190,6 +295,9 @@ FROM funcionario
 ORDER BY nomeFuncionario ASC
 
 /*13)Listar todos os dados dos aluguéis realizados em ordem de data da mais antiga para a mais nova.*/
+
+SELECT * FROM Aluguel
+ORDER BY dataHoraRetirada ASC;
 
 /*14)Listar nome, cidade e estado de todos os clientes da baixada santista em ordem alfabética por nome.*/
 
@@ -218,9 +326,96 @@ SELECT * FROM cliente
 WHERE (nomeCliente LIKE 'M%' AND estado ='PE')
  
 
-
 /*20)Listar apenas as cadeiras e a quantidade que possui em estoque em ordem de quantidade, da que mais possui itens para a que menos possui.*/ 
 
 /*21)Listar todos os dados dos alugueis que ocorreram entre 25/12 e 31/12 de 2024 em ordem de data da mais antiga para a mais nova.*/ 
 
+
+
+/*Atividade avaliativa 27/11/2025 
+
+/*1.Criar um aluguel de equipamento para o mês de novembro (qualquer data e hora), qualquer equipamento, qualquer funcionário e qualquer cliente, mas cujo pagamento não tenha sido feito (ficou em aberto).*/
+START TRANSACTION;
+ 
+INSERT INTO Aluguel (idCliente, idFuncionario, dataHoraRetirada)
+VALUES ((SELECT idCliente FROM Cliente WHERE nomeCliente = 'Pão Duro Mac Money'),
+(SELECT idFuncionario FROM Funcionario WHERE nomeFuncionario = 'Cascão'),
+'2024-11-14 14:30:00'
+);
+ 
+INSERT INTO AluguelEquipamento (idAluguel, idEquipamento, qtd, valorUnitario, valorItem)
+VALUES (LAST_INSERT_ID(),
+(SELECT idEquipamento FROM Equipamento WHERE nomeEquipamento = 'Mesinha'),1,1.50,(1.50 * 1)
+);
+ 
+UPDATE Equipamento
+SET qtd = qtd - 1
+WHERE nomeEquipamento = 'Mesinha';
+ 
+COMMIT; 
+
+SELECT * FROM equipamento 
+
+/* 2. Listar nome de todos os funcionários, cpf e os aluguéis feitos por ele (apenas a data e que equipamento alugou). */
+SELECT Funcionario.nomeFuncionario, Funcionario.cpf, Aluguel.dataHoraRetirada, Equipamento.nomeEquipamento FROM Funcionario
+INNER JOIN Aluguel ON Funcionario.idFuncionario = Aluguel.idFuncionario
+INNER JOIN AluguelEquipamento ON Aluguel.idAluguel = AluguelEquipamento.idAluguel
+INNER JOIN Equipamento ON AluguelEquipamento.idEquipamento = Equipamento.idEquipamento;
+ 
+/* 3. Listar nome do cliente, cpf, datas que ele esteve na praia, quem atendeu este cliente, tudo isto, ordenado por data, da mais nova para a mais antiga, apenas no mês de DEZ24.*/
+SELECT Cliente.nomeCliente, Cliente.cpf, Aluguel.dataHoraRetirada, Funcionario.nomeFuncionario FROM Cliente
+INNER JOIN Aluguel ON Cliente.idCliente = Aluguel.idCliente
+INNER JOIN Funcionario ON Aluguel.idFuncionario = Funcionario.idFuncionario
+WHERE Aluguel.dataHoraRetirada BETWEEN '2024-12-01 00:00:00' AND '2024-12-31 23:59:59'
+ORDER BY Aluguel.dataHoraRetirada DESC;
+ 
+/* 4. Lista do nome dos equipamentos que foram mais alugados em ordem decrescente, do equipamento mais alugado para o menos alugado. Equipamentos não alugados devem sair no relatório.*/
+SELECT Equipamento.nomeEquipamento, COALESCE(SUM(AluguelEquipamento.qtd), 0) AS TotalAlugado FROM Equipamento
+LEFT JOIN AluguelEquipamento ON Equipamento.idEquipamento = AluguelEquipamento.idEquipamento
+GROUP BY Equipamento.idEquipamento, Equipamento.nomeEquipamento
+ORDER BY TotalAlugado DESC;
+ 
+/* 5. Listar a arrecadação bruta da barraca de praia entre Natal e Ano Novo. */
+SELECT SUM(AluguelEquipamento.valorItem) AS ArrecadacaoBruta FROM Aluguel
+INNER JOIN AluguelEquipamento ON Aluguel.idAluguel = AluguelEquipamento.idAluguel
+WHERE Aluguel.dataHoraRetirada BETWEEN '2024-12-25 00:00:00' AND '2024-12-31 23:59:59';
+ 
+/* 6. Reajustar preço por hora de todos os equipamentos em 10%. */
+UPDATE Equipamento
+SET valorHora = valorHora * 1.10;
+ 
+/* 7. Listar a quantidade de clientes que pagaram utilizando determinada forma de pagamento, em ordem crescente, do método mais usado para o menos usado. Também é necessário que pagamentos não realizados sejam apontados.*/
+SELECT COALESCE(formaPagamento, 'Não pago') AS FormaDePagamento,COUNT(*) AS Quantidade
+FROM aluguel
+GROUP BY formaPagamento
+ORDER BY Quantidade ASC;
+ 
+/* 8. Listar quanto a barraca faturou por dia, em cada um dos dias do mês de dezembro apenas. */
+SELECT DATE(Aluguel.dataHoraRetirada) AS Dia, SUM(AluguelEquipamento.valorItem) AS FaturamentoDiario FROM Aluguel
+INNER JOIN AluguelEquipamento ON Aluguel.idAluguel = AluguelEquipamento.idAluguel
+WHERE MONTH(Aluguel.dataHoraRetirada) = 12 AND YEAR(Aluguel.dataHoraRetirada) = 2024
+GROUP BY DATE(Aluguel.dataHoraRetirada);
+ 
+/* 9. .Excluir o pagamento e todas as referências a ele criadas no item 1. Se tentar excluir direto da tabela aluguel teremos um problema? Por que isto ocorre? Como resolver (escrever o código usado)? */
+/* Sim, se tentarmos excluir direto da tabela Aluguel o banco de dados bloqueará a ação devido à CONSTRAINT de Chave Estrangeira (Foreign Key), isso quer dizer que a tabela AluguelEquipamento depende do ID que está na tabela Aluguel então para poder solucionar isso primeiro teriamos que excluir os itens filhos (AluguelEquipamento), depois o pai (Aluguel).*/ 
+
+DELETE FROM AluguelEquipamento
+WHERE AluguelEquipamento.idAluguel IN (SELECT Aluguel.idAluguel FROM Aluguel
+INNER JOIN Cliente ON Aluguel.idCliente = Cliente.idCliente
+WHERE Cliente.nomeCliente = 'Pão Duro Mac Money'
+AND MONTH(Aluguel.dataHoraRetirada) = 11
+);
+ 
+
+DELETE FROM Aluguel
+WHERE Aluguel.idCliente = (SELECT Cliente.idCliente FROM Cliente WHERE Cliente.nomeCliente = 'Pão Duro Mac Money')
+AND MONTH(Aluguel.dataHoraRetirada) = 11;
+ 
+ 
+/* 10. Listar todos os equipamentos que tiveram a quantidade de aluguéis inferiores a 5 unidades, durante o mês de DEZ24. */
+SELECT Equipamento.nomeEquipamento, COALESCE(SUM(AluguelEquipamento.qtd), 0) AS QuantidadeTotal FROM Equipamento
+LEFT JOIN AluguelEquipamento ON Equipamento.idEquipamento = AluguelEquipamento.idEquipamento
+LEFT JOIN Aluguel ON AluguelEquipamento.idAluguel = Aluguel.idAluguel AND MONTH(Aluguel.dataHoraRetirada) = 12 AND YEAR(Aluguel.dataHoraRetirada) = 2024
+GROUP BY Equipamento.idEquipamento, Equipamento.nomeEquipamento
+HAVING QuantidadeTotal < 5;
 
